@@ -1,0 +1,77 @@
+﻿@model ProductUpdateViewModel
+
+<div class="container mt-4">
+    <h2>Update Product</h2>
+
+    <form asp-action="Update" enctype="multipart/form-data" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label asp-for="Price" class="form-label"></label>
+                <input asp-for="Price" class="form-control" />
+            </div>
+            <div class="col-md-4 mb-3">
+                <label asp-for="Weight" class="form-label"></label>
+                <input asp-for="Weight" class="form-control" />
+            </div>
+            <div class="col-md-4 mb-3">
+                <label asp-for="StockQuantity" class="form-label"></label>
+                <input asp-for="StockQuantity" class="form-control" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="CategoryId" class="form-label">Category</label>
+            <select asp-for="CategoryId" asp-items="Model.CategorySelectListItems" class="form-select"></select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Tags</label><br />
+            @foreach (var tag in Model.TagSelectListItems)
+            {
+                <div class="form-check form-check-inline">
+                    <input type="checkbox" name="TagIds" value="@tag.Value" class="form-check-input"
+                           @(Model.TagIds.Contains(int.Parse(tag.Value)) ? "checked" : "") />
+                    <label class="form-check-label">@tag.Text</label>
+                </div>
+            }
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Current Cover</label><br />
+            @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
+            {
+                <img src="~/uploads/products/@Model.CoverImageUrl" width="100" class="img-thumbnail mb-2" />
+            }
+            <input asp-for="CoverImageFile" type="file" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Gallery Images</label><br />
+            @if (Model.Images != null && Model.Images.Any())
+            {
+                @foreach (var image in Model.Images)
+                {
+                    <img src="~/uploads/products/@image.ImageUrl" width="70" class="img-thumbnail me-1 mb-1" />
+                }
+            }
+            <input asp-for="ImageFiles" type="file" multiple class="form-control mt-2" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Update</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

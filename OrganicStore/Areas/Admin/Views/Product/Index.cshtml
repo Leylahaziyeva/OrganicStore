@@ -1,0 +1,77 @@
+﻿@model List<Product>
+
+<div class="container mt-4">
+    <h2 class="mb-3">Products</h2>
+
+    <a asp-action="Create" class="btn btn-primary mb-3">Create New Product</a>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Cover</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Weight</th>
+                <th>Stock</th>
+                <th>Category</th>
+                <th>Tags</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(product.CoverImageUrl))
+                    {
+                            <img src="~/uploads/products/@product.CoverImageUrl" width="70" class="img-thumbnail" />
+                    }
+                </td>
+                <td>@product.Name</td>
+                <td>@product.Description</td>
+                <td>@product.Price.ToString("C")</td>
+                <td>@product.Weight</td>
+                <td>@product.StockQuantity</td>
+                <td>@product.Category?.Name</td>
+                <td>
+                    @if (product.ProductTags.Any())
+                    {
+                        foreach (var tag in product.ProductTags.Select(t => t.Tag))
+                        {
+                            <span class="badge bg-info text-dark me-1">@tag?.Name</span>
+                        }
+                    }
+                </td>
+                    <td>
+                        <a class="btn btn-sm btn-info" asp-controller="product" asp-action="details" asp-route-id="@product.Id">Details</a>
+                        <a asp-action="Update" asp-route-id="@product.Id" class="btn btn-sm btn-warning">Edit</a>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="deleteProduct(@product.Id, this)">Delete</button>
+                    </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function deleteProduct(id, element) {
+        if (!confirm("Are you sure you want to delete this product?")) return;
+
+        fetch(`https://localhost:7082/Admin/product/delete/${id}`, {
+            method: "POST"
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                element.closest("tr").remove();
+            } else {
+                alert(data.message || "Failed to delete product.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
+</script>

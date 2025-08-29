@@ -1,0 +1,51 @@
+﻿@model ProductDetailViewModel
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="main-image mb-3">
+                @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
+                {
+                    <img src="~/uploads/products/@Model.CoverImageUrl" alt="@Model.Name" class="img-fluid rounded shadow" />
+                }
+            </div>
+            @if (Model.Images != null && Model.Images.Any(x => !x.IsMain))
+            {
+                <div class="image-gallery d-flex flex-wrap gap-2">
+                    @foreach (var image in Model.Images.Where(x => !x.IsMain))
+                    {
+                        <img src="~/uploads/products/@image.ImageUrl" alt="@Model.Name" class="img-thumbnail"
+                             style="width:100px; height:100px; object-fit:cover;" />
+                    }
+                </div>
+            }
+        </div>
+        <div class="col-md-7">
+            <h2>@Model.Name</h2>
+            <p class="text-muted"> 
+            <strong>Category:</strong>
+                @if (!string.IsNullOrEmpty(Model.CategoryName))
+                {
+                    <span>@Model.CategoryName</span>
+                }
+            </p>
+
+            <p><strong>Price:</strong> @Model.Price.ToString("C")</p>
+            <p><strong>Stock:</strong> @Model.StockQuantity</p>
+            <p><strong>Weight:</strong> @Model.Weight kg</p>
+            <p><strong>Description:</strong> @Model.Description</p>
+
+            @if (Model.Tags != null && Model.Tags.Count > 0)
+            {
+                <div class="mb-3">
+                    <strong>Tags:</strong>
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <span class="badge bg-primary me-1">@tag</span>
+                    }
+                </div>
+            }
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>

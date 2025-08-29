@@ -1,0 +1,28 @@
+﻿@model Category
+
+<div class="row">
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card shadow-sm rounded-3">
+            <div class="card-body text-center">
+                <h4 class="card-title mb-4">Category Details</h4>
+
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img src="~/uploads/categories/@Model.ImageUrl" alt="@Model.Name" class="img-thumbnail mb-3"
+                         style="width:200px; height:200px; object-fit:cover;" />
+                }
+                else
+                {
+                    <div class="alert alert-secondary">No Image Available</div>
+                }
+
+                <h5 class="fw-bold">@Model.Name</h5>
+
+                <div class="mt-4">
+                    <a asp-action="Index" class="btn btn-light mr-2"><i class="mdi mdi-arrow-left"></i>Back to List</a>
+                    <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-warning mr-2"><i class="mdi mdi-pencil"></i>Edit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
